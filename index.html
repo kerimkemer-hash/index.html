@@ -103,6 +103,29 @@ button:hover { transform: scale(1.1); }
     transform: scale(1.08);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
+    /* Unicorn Zıplama Animasyonu */
+@keyframes unicornJump {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-20px); }
+    50% { transform: translateY(0); }
+    70% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.jump {
+    animation: unicornJump 0.6s ease;
+}
+
+/* Doğru Cevap Ekran Parıltı */
+@keyframes flashGlow {
+    0% { background-color: rgba(255,255,255,0); }
+    50% { background-color: rgba(255,255,255,0.6); }
+    100% { background-color: rgba(255,255,255,0); }
+}
+
+.flash {
+    animation: flashGlow 0.6s ease;
+}
 </style>
 </head>
 
@@ -164,12 +187,14 @@ function newQuestion() {
 function checkAnswer(number) {
     if (score >= 10) return;
 
-    if (number === correctNumber) {
-        score++;
-        document.getElementById("score").innerText = "Puan: " + score + " / 10";
-        document.getElementById("result").innerText = "⭐ Harika!";
-        speak("Harika bildin!");
-        createStars();
+   if (number === correctNumber) {
+    score++;
+    document.getElementById("score").innerText = "Puan: " + score + " / 10";
+    document.getElementById("result").innerText = "⭐ Harika!";
+    speak("Harika bildin!");
+    createStars();
+    unicornJump();
+    screenFlash();
 
         if (score === 10) {
             document.getElementById("winScreen").style.display = "block";
@@ -217,6 +242,16 @@ function resetGame() {
 
 createButtons();
 newQuestion();
+    function unicornJump() {
+    const unicorn = document.getElementById("character");
+    unicorn.classList.add("jump");
+    setTimeout(() => unicorn.classList.remove("jump"), 600);
+}
+
+function screenFlash() {
+    document.body.classList.add("flash");
+    setTimeout(() => document.body.classList.remove("flash"), 600);
+}
 </script>
 <footer>
 Tasarım Okan KEMER’e aittir.
