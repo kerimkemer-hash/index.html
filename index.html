@@ -3,170 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sayı Oyunu - Level 4</title>
+<title>Sayı Oyunu - Level 3</title>
 
 <style>
-body{
+body {
     font-family: Arial, sans-serif;
-    text-align:center;
-    background:linear-gradient(135deg,#fff0f5,#e0f7ff);
-    margin:0;
-    padding:20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ffe6f7, #e6f7ff);
+    margin: 0;
+    padding: 20px;
 }
 
-h1{color:#6a0dad;}
-
-#modeBox{margin-bottom:15px;}
-
-#score{margin:10px;font-size:18px;}
-
-#question{font-size:22px;margin:10px;}
-
-#result{height:28px;font-size:18px;margin:8px;}
-
-.buttons{
-    display:grid;
-    gap:8px;
-    max-width:600px;
-    margin:auto;
+h1 {
+    color: #6a0dad;
 }
 
-button{
-    font-size:18px;
-    padding:10px;
-    border-radius:10px;
-    border:none;
-    background:white;
+#character {
+    font-size: 60px;
+    margin: 10px;
 }
 
-.star{
-    position:fixed;
-    bottom:-40px;
-    font-size:22px;
-    animation:floatUp 1.8s linear forwards;
+#score {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-@keyframes floatUp{
-    to{
-        transform:translateY(-110vh);
-        opacity:0;
+#question {
+    font-size: 28px;
+    margin: 15px;
+}
+
+#result {
+    font-size: 22px;
+    height: 35px;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    max-width: 500px;
+    margin: auto;
+}
+
+button {
+    font-size: 28px;
+    padding: 18px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: white;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.star {
+    position: fixed;
+    bottom: -50px;
+    font-size: 30px;
+    animation: floatUp 2.5s linear forwards;
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
     }
 }
 
-#winScreen{
-    display:none;
-    font-size:22px;
-    margin-top:15px;
+#winScreen {
+    display: none;
+    font-size: 28px;
+    margin-top: 20px;
+}
+
+#resetBtn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎮 Süper Sayı Oyunu</h1>
+<h1>🌟 Süper Sayı Oyunu 🌟</h1>
 
-<div id="modeBox">
-Mod:
-<select id="modeSelect">
-<option value="10">Kolay (1-10)</option>
-<option value="20">Orta (1-20)</option>
-<option value="30">Zor (1-30)</option>
-</select>
-</div>
-
+<div id="character">🧸</div>
 <div id="score">Puan: 0 / 10</div>
 <div id="question"></div>
 <div id="result"></div>
+
 <div class="buttons" id="buttons"></div>
 
 <div id="winScreen">
-🏆 10 Doğru! Bölüm Bitti 🎉<br><br>
-<button onclick="resetGame()">Tekrar Oyna</button>
+    🏆 Tebrikler! 10 doğru yaptın! 🎉
+    <br>
+    <button id="resetBtn" onclick="resetGame()">Tekrar Oyna</button>
 </div>
 
 <script>
-let maxNumber = 10;
-let correctNumber = 1;
+let correctNumber;
 let score = 0;
 
-const modeSelect = document.getElementById("modeSelect");
-const buttonsDiv = document.getElementById("buttons");
-
-modeSelect.addEventListener("change", function(){
-    maxNumber = parseInt(this.value);
-    resetGame();
-});
-
-function speak(text){
-    if(!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    let s = new SpeechSynthesisUtterance(text);
-    s.lang = "tr-TR";
-    window.speechSynthesis.speak(s);
+function speak(text) {
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "tr-TR";
+    window.speechSynthesis.speak(speech);
 }
 
-function newQuestion(){
-    correctNumber = Math.floor(Math.random()*maxNumber)+1;
-    document.getElementById("question").innerText =
-        "Hadi " + correctNumber + " sayısını bul!";
-    document.getElementById("result").innerText="";
+function newQuestion() {
+    correctNumber = Math.floor(Math.random() * 10) + 1;
+    document.getElementById("question").innerText = "Hadi " + correctNumber + " sayısını bul!";
+    speak(correctNumber.toString());
+    document.getElementById("result").innerText = "";
 }
 
-function checkAnswer(num){
-    if(score >= 10) return;
+function checkAnswer(number) {
+    if (score >= 10) return;
 
-    if(num === correctNumber){
+    if (number === correctNumber) {
         score++;
-        document.getElementById("score").innerText =
-            "Puan: " + score + " / 10";
-        document.getElementById("result").innerText="⭐ Doğru!";
-        speak("Doğru");
+        document.getElementById("score").innerText = "Puan: " + score + " / 10";
+        document.getElementById("result").innerText = "⭐ Harika!";
+        speak("Harika!");
         createStars();
 
-        if(score === 10){
-            document.getElementById("winScreen").style.display="block";
-            speak("Tebrikler kazandın");
+        if (score === 10) {
+            document.getElementById("winScreen").style.display = "block";
+            speak("Tebrikler kazandın!");
             return;
         }
 
-        setTimeout(newQuestion,1000);
-
-    }else{
-        document.getElementById("result").innerText="❌ Tekrar dene!";
+        setTimeout(newQuestion, 1200);
+    } else {
+        document.getElementById("result").innerText = "❌ Tekrar dene!";
         speak("Tekrar dene");
     }
 }
 
-function createStars(){
-    for(let i=0;i<5;i++){
-        let star=document.createElement("div");
-        star.className="star";
-        star.style.left=Math.random()*100+"vw";
-        star.innerText="⭐";
+function createStars() {
+    for (let i = 0; i < 5; i++) {
+        let star = document.createElement("div");
+        star.className = "star";
+        star.style.left = Math.random() * 100 + "vw";
+        star.innerText = "⭐";
         document.body.appendChild(star);
-        setTimeout(()=>star.remove(),1800);
+        setTimeout(() => star.remove(), 2500);
     }
 }
 
-function createButtons(){
-    buttonsDiv.innerHTML="";
-    let columns = maxNumber <= 10 ? 5 : 6;
-    buttonsDiv.style.gridTemplateColumns =
-        "repeat("+columns+",1fr)";
-
-    for(let i=1;i<=maxNumber;i++){
-        let btn=document.createElement("button");
-        btn.innerText=i;
-        btn.onclick=function(){checkAnswer(i);};
-        buttonsDiv.appendChild(btn);
+function createButtons() {
+    let container = document.getElementById("buttons");
+    for (let i = 1; i <= 10; i++) {
+        let btn = document.createElement("button");
+        btn.innerText = i;
+        btn.onclick = () => checkAnswer(i);
+        container.appendChild(btn);
     }
 }
 
-function resetGame(){
-    score=0;
-    document.getElementById("score").innerText="Puan: 0 / 10";
-    document.getElementById("winScreen").style.display="none";
-    createButtons();
+function resetGame() {
+    score = 0;
+    document.getElementById("score").innerText = "Puan: 0 / 10";
+    document.getElementById("winScreen").style.display = "none";
     newQuestion();
 }
 
