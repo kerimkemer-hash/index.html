@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sayı Oyunu - Level 3</title>
+<title>Süper Sayı Oyunu - Sesli</title>
 
 <style>
 body {
@@ -14,30 +14,15 @@ body {
     padding: 20px;
 }
 
-h1 {
-    color: #6a0dad;
-}
+h1 { color: #6a0dad; }
 
-#character {
-    font-size: 60px;
-    margin: 10px;
-}
+#character { font-size: 60px; margin: 10px; }
 
-#score {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
+#score { font-size: 20px; margin-bottom: 10px; }
 
-#question {
-    font-size: 28px;
-    margin: 15px;
-}
+#question { font-size: 26px; margin: 15px; }
 
-#result {
-    font-size: 22px;
-    height: 35px;
-    margin-bottom: 10px;
-}
+#result { font-size: 22px; height: 35px; margin-bottom: 10px; }
 
 .buttons {
     display: grid;
@@ -48,18 +33,16 @@ h1 {
 }
 
 button {
-    font-size: 28px;
-    padding: 18px;
+    font-size: 24px;
+    padding: 15px;
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    background-color: white;
+    background: white;
     transition: 0.2s;
 }
 
-button:hover {
-    transform: scale(1.1);
-}
+button:hover { transform: scale(1.1); }
 
 .star {
     position: fixed;
@@ -77,17 +60,8 @@ button:hover {
 
 #winScreen {
     display: none;
-    font-size: 28px;
+    font-size: 26px;
     margin-top: 20px;
-}
-
-#resetBtn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
 }
 </style>
 </head>
@@ -97,33 +71,54 @@ button:hover {
 <h1>🌟 Süper Sayı Oyunu 🌟</h1>
 
 <div id="character">🧸</div>
+
+<div style="margin-bottom:15px;">
+<button onclick="setLevel(1)">Kolay (1-5)</button>
+<button onclick="setLevel(2)">Orta (1-10)</button>
+<button onclick="setLevel(3)">Zor (1-20)</button>
+</div>
+
 <div id="score">Puan: 0 / 10</div>
-<div id="question"></div>
+<div id="question">Dinle ve doğru sayıyı seç!</div>
 <div id="result"></div>
 
 <div class="buttons" id="buttons"></div>
 
 <div id="winScreen">
-    🏆 Tebrikler! 10 doğru yaptın! 🎉
-    <br>
-    <button id="resetBtn" onclick="resetGame()">Tekrar Oyna</button>
+🏆 Tebrikler! 10 doğru yaptın!
+<br><br>
+<button onclick="resetGame()">Tekrar Oyna</button>
 </div>
 
 <script>
 let correctNumber;
 let score = 0;
+let maxNumber = 10;
 
-function speak(text) {
-    let speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "tr-TR";
-    window.speechSynthesis.speak(speech);
+function speak(text, delay = 0) {
+    setTimeout(() => {
+        window.speechSynthesis.cancel();
+        let speech = new SpeechSynthesisUtterance(text);
+        speech.lang = "tr-TR";
+        speech.rate = 0.9;
+        window.speechSynthesis.speak(speech);
+    }, delay);
+}
+
+function setLevel(level) {
+    if (level === 1) maxNumber = 5;
+    if (level === 2) maxNumber = 10;
+    if (level === 3) maxNumber = 20;
+    resetGame();
 }
 
 function newQuestion() {
-    correctNumber = Math.floor(Math.random() * 10) + 1;
-    document.getElementById("question").innerText = "Hadi " + correctNumber + " sayısını bul!";
-    speak(correctNumber.toString());
+    correctNumber = Math.floor(Math.random() * maxNumber) + 1;
     document.getElementById("result").innerText = "";
+
+    speak("Hazır mısın?");
+    speak(correctNumber.toString(), 1200);
+    speak(correctNumber.toString(), 2500);
 }
 
 function checkAnswer(number) {
@@ -133,19 +128,20 @@ function checkAnswer(number) {
         score++;
         document.getElementById("score").innerText = "Puan: " + score + " / 10";
         document.getElementById("result").innerText = "⭐ Harika!";
-        speak("Harika!");
+        speak("Harika bildin!");
         createStars();
 
         if (score === 10) {
             document.getElementById("winScreen").style.display = "block";
-            speak("Tebrikler kazandın!");
+            speak("Tebrikler! Oyunu kazandın!");
             return;
         }
 
-        setTimeout(newQuestion, 1200);
+        setTimeout(newQuestion, 2000);
     } else {
         document.getElementById("result").innerText = "❌ Tekrar dene!";
-        speak("Tekrar dene");
+        speak("Olmadı.");
+        speak("Doğru cevap " + correctNumber, 1000);
     }
 }
 
@@ -162,7 +158,8 @@ function createStars() {
 
 function createButtons() {
     let container = document.getElementById("buttons");
-    for (let i = 1; i <= 10; i++) {
+    container.innerHTML = "";
+    for (let i = 1; i <= maxNumber; i++) {
         let btn = document.createElement("button");
         btn.innerText = i;
         btn.onclick = () => checkAnswer(i);
@@ -174,6 +171,7 @@ function resetGame() {
     score = 0;
     document.getElementById("score").innerText = "Puan: 0 / 10";
     document.getElementById("winScreen").style.display = "none";
+    createButtons();
     newQuestion();
 }
 
