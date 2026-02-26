@@ -78,6 +78,31 @@ button:hover { transform: scale(1.1); }
     letter-spacing: 1px;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
 }
+    /* Level Buton Tasarım */
+.level-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.level-buttons button {
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #6a0dad, #9b59ff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.level-buttons button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 </style>
 </head>
 
@@ -87,7 +112,7 @@ button:hover { transform: scale(1.1); }
 
 <div id="character">🦄</div>
 
-<div style="margin-bottom:15px;">
+<div class="level-buttons">
 <button onclick="setLevel(1)">Kolay (1-5)</button>
 <button onclick="setLevel(2)">Orta (1-10)</button>
 <button onclick="setLevel(3)">Zor (1-20)</button>
